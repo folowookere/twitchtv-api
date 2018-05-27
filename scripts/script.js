@@ -12,8 +12,7 @@ $(document).ready(function() {
            
     });
 
-//  var followerName = follows[i].user.display_name;
-//     streams.push(followerName);
+
     for (var i = 0; i < streams.length; i++) {
         
         $.ajax ({
@@ -22,15 +21,17 @@ $(document).ready(function() {
             headers: { 'client-ID': '6dkosy4qeyyw80sv3nqxi21ozs1tst'
             },
             success: function(dataI) {
-                var logo = dataI.stream.logo;
+        
+                console.log(dataI);
+                var logo = dataI.stream.channel.logo;
                 var displayName = dataI.stream.channel.display_name;
                 var statusofuser = dataI.stream.channel.status;
                 
-                $("#followers").append("<div class='row'>" + "<div class='col-4'>" + logo
-                + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + statusofuser + "</div></div>");
+                $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
+                + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + "Online " + statusofuser + "</div></div>");
             },
            error: function(error) {
-               
+             
 }
           
 });
