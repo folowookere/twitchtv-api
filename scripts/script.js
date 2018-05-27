@@ -1,108 +1,39 @@
 $(document).ready(function() {
     
-    var followers = [];
-    var url ="https://wind-bow.glitch.me/twitch-api/streams/freecodecamp";
-    $.getJSON (url, function (fccIsOnline) {
-            // console.log(dataA);
+    var streams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+
+    $.getJSON ('https://api.twitch.tv/kraken/streams/freecodecamp?client_id=6dkosy4qeyyw80sv3nqxi21ozs1tst').done(function (fccIsOnline) {
+        
            if (fccIsOnline.stream === null) { 
-               $("#freeccStatus").addClass("text-danger").html("Currently offline");
+               $("#freeccStatus").addClass("text-danger").html("FreeCodeCamp is Currently Offline");
            } else {
                $("#freeccStatus").addClass("text-success").html("Online");
-           }
-        });
+           }   
+           
+    });
+
+//  var followerName = follows[i].user.display_name;
+//     streams.push(followerName);
+    for (var i = 0; i < streams.length; i++) {
         
-    var followersUrl ="https://wind-bow.glitch.me/twitch-api/channels/freecodecamp/follows/";
-    $.getJSON(followersUrl, function(fccFollowers) {
-        for (var i = 0; i < fccFollowers.follows.length; i++) {
-        var followerName = fccFollowers.follows[i].user.display_name;
-        followers.push(followerName);
-        
-        }
-        followers.push("funmio4043");
-        followers.push("brunofin");
-        followers.push("esl_sc2");
-        
-        for (var i = 0; i < followers.length; i++) {
-            var followersUrl2 = "https://wind-bow.glitch.me/twitch-api/streams/" + followers[i];
-        
-        $.getJSON(followersUrl2, function(fccFollowersOffline) {
-            
-            var logo;
-            var statusofuser;
-            var displayName;
-            
-            if (fccFollowersOffline.error) {
-                // console.log(fccFollowersOffline.error);
-                logo = '<p style="color:red"><i class="far fa-times-circle fa-sm"></i></p>';
-                displayName = fccFollowersOffline.message;
-                statusofuser = fccFollowersOffline.error;
+        $.ajax ({
+            type: "GET",
+            url: "https://api.twitch.tv/kraken/streams/" + streams[i],
+            headers: { 'client-ID': '6dkosy4qeyyw80sv3nqxi21ozs1tst'
+            },
+            success: function(dataI) {
+                var logo = dataI.stream.logo;
+                var displayName = dataI.stream.channel.display_name;
+                var statusofuser = dataI.stream.channel.status;
                 
                 $("#followers").append("<div class='row'>" + "<div class='col-4'>" + logo
                 + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + statusofuser + "</div></div>");
-            }
-            
-            if (fccFollowersOffline.stream === null) {
-                console.log(1);
-            }
-            $.getJSON(fccFollowersOffline._links.channel, function(fccFollowersOnline) {
-                status = "Offline";
-                logo = fccFollowersOnline.logo;
-                name = fccFollowersOffline.display_name;
-                
-            if (logo === null) {
-                logo = '<p style="color:green"><i class="far fa-circle fa-sm"></i></p>';
-            }
-             $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
-                + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + status + "</div></div>");
-            
-            
-           
-        });
-            
-         });
-        }
-        
-        for (var i = 0; i < followers.length; i++) {
-        // var followersOnlineUrl = "https://wind-bow.glitch.me/twitch-api/streams/" + followers[i];
-        $.ajax({
- type: 'GET',
- headers: {
-   'Client-ID': ' 6dkosy4qeyyw80sv3nqxi21ozs1tst',
-   'Accept': 'application/vnd.twitchtv.v5+json'
- },
- url: "https://api.twitch.tv/kraken/streams/" + followers[i],
- success: function(followersOnline) {
-   console.log(followersOnline);
-     var logo = followersOnline.stream.channel.logo;
-                 if (logo === null) {
-                logo = '<p style="color:red"><i class="far fa-times-circle fa-sm"></i></p>';
-            }
-                var status = followersOnline.stream.channel.status;
-                
-                var displayName = followersOnline.stream.channel.display_name;
-                
-                console.log(status);
-                $("#followers").prepend("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
-                + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + status + "</div></div>");
-            
- }
+            },
+           error: function(error) {
+               
+}
+          
 });
-        
-        
-            //     var logo = followersOnline.stream[].channel.logo;
-            //      if (logo === null) {
-            //     logo = '<p style="color:red"><i class="far fa-times-circle fa-sm"></i></p>';
-            // }
-            //     var status = followersOnline.stream.channel.status;
-                
-            //     var displayName = followersOnline.stream.channel.display_name;
-                
-            //     console.log(status);
-            //     $("#followers").prepend("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
-            //     + "</div>" + "<div class='col-4'>" + displayName + "</div>" + "<div class='col-4'>" + status + "</div></div>");
-            
-        
-    
-        }
-    });
+}
+
 });
