@@ -14,51 +14,57 @@ $(document).ready(function() {
                $("#freeccStatus").addClass("text-success").html("Online");
            }
            });
+
     
-           
-    
-    for(var i in streams) {
+    for(var i = 0; i < streams.length; i++) {
        var streamUrl = urlStreams + streams[i];
        var channelUrl = urlChannels + streams[i];
 
         $.getJSON(streamUrl, function(data){
-
-            
                 
                 var logo = data.stream.channel.logo;
                 var displayName = data.stream.channel.display_name;
                 var channelURL = data.stream.channel.url;
                 var statusOfUser = data.stream.channel.status;
-                 
-            
-                alert("We got there");
-             $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
+    
+                 $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
                 + "</div>" + "<div class='col-4'>" + "<a href ='" + channelURL + "'>" + displayName + "</a>" + "</div>" + "<div class='col-4'>" + '<p class="text-success text-center"><b>Currently Online Playing: </b></p>' + '<p class="text-center">' + statusOfUser + '</p>' + "</div></div>");
                 
                 $("img").addClass("img-thumbnail rounded mb-2 w-50");
-        
                    
                     });
+                    
                    $.getJSON(streamUrl, function(data){
                        if (data.stream === null)  {
-                    var displayName = data.display_name;
-                    var status = data.status;
-                    var message = data.message;
+                           $.getJSON(channelUrl, function(data){
+                                var logo = data.logo;
+                                var displayName = data.display_name;
+                                var channelURL = data.url;
+
                   
-             $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + data.logo + "'>"
-                    + "</div>" + "<div class='col-4'>" + displayName  + "</div>" + "<div class='col-4'>" + '<p class="text-danger text-center"><b>Currently Offline </b></p>' + "</div></div>");
-                    
+             $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<img src='" + logo + "'>"
+                    + "</div>" + "<div class='col-4'>" + "<a href ='" + channelURL + "'>" + displayName  + "</a>" + "</div>" + "<div class='col-4'>" + '<p class="text-danger text-center"><b>Currently Offline </b></p>' + "</div></div>");
+                         $("img").addClass("img-thumbnail rounded mb-2 w-50");
+                           });
                    
-          } else {
-        $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<i class='far fa-times-circle fa-5x p-3' style='color:red'></i>"
+          } else 
+               $.getJSON(channelUrl, function(data){
+                    var message = data.message;
+                    var status = data.status;
+                    
+               $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<i class='far fa-times-circle fa-5x p-3' style='color:red'></i>"
                     + "</div>" + "<div class='col-4'>" + message + "</div>" + "<div class='col-4'>" + '<p class="text-warning text-center"><b>Channel does not exist.</b></p>' + "</div></div>");
                      $("img").addClass("img-thumbnail rounded mb-2 w-50");
-                     
-                         
           
-          }
                    });
-    }
-
-
+            });
+        }
 });
+
+//           if (status === 404) {
+        // $("#followers").append("<div class='row'>" + "<div class='col-4'>" + "<i class='far fa-times-circle fa-5x p-3' style='color:red'></i>"
+        //             + "</div>" + "<div class='col-4'>" + message + "</div>" + "<div class='col-4'>" + '<p class="text-warning text-center"><b>Channel does not exist.</b></p>' + "</div></div>");
+        //              $("img").addClass("img-thumbnail rounded mb-2 w-50");
+        //           }
+        //           else {
+                
